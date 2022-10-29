@@ -59,10 +59,10 @@ fi
 
 if [ $SCAN_MODE == "short" ]; then
     # Start from 5 days ago
-    DATE_LIMIT="$(date -v-5d "+%Y-%m-%d")"
+    DATE_LIMIT="$(date -d "5 days ago" "+%Y-%m-%d")"
 elif [ $SCAN_MODE == "medium" ]; then
     # Start from 30 days ago
-    DATE_LIMIT="$(date -v-30d "+%Y-%m-%d")"
+    DATE_LIMIT="$(date -d "30 days ago" "+%Y-%m-%d")"
 fi
 
 if [ "$DATE_LIMIT" ]; then
