@@ -1,0 +1,109 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: gphotos-sync
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: gphotos-sync-short
+  namespace: gphotos-sync
+spec:
+  schedule: "50 */3 * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          hostPID: true
+          containers:
+          - name: gphotos-sync
+            image: ghcr.io/iaguis/gphotos-sync:v1
+            imagePullPolicy: IfNotPresent
+            command:
+            - /usr/bin/gphotos-sync.sh
+            - short
+            volumeMounts:
+            - mountPath: /tmp/gphotos-cdp
+              name: chrome-profile
+            - mountPath: /home/nonroot/Downloads/gphotos-cdp
+              name: google-photos
+          volumes:
+          - name: chrome-profile
+            hostPath:
+              path: /mnt/locke-nas/iago-home/gphotos-cdp
+              type: Directory
+          - name: google-photos
+            hostPath:
+              path: /mnt/locke-nas/google-photos
+              type: Directory
+          restartPolicy: Never
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: gphotos-sync-medium
+  namespace: gphotos-sync
+spec:
+  schedule: "0 0 * * 6"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          hostPID: true
+          containers:
+          - name: gphotos-sync
+            image: ghcr.io/iaguis/gphotos-sync:v1
+            imagePullPolicy: IfNotPresent
+            command:
+            - /usr/bin/gphotos-sync.sh
+            - medium
+            volumeMounts:
+            - mountPath: /tmp/gphotos-cdp
+              name: chrome-profile
+            - mountPath: /home/nonroot/Downloads/gphotos-cdp
+              name: google-photos
+          volumes:
+          - name: chrome-profile
+            hostPath:
+              path: /mnt/locke-nas/iago-home/gphotos-cdp
+              type: Directory
+          - name: google-photos
+            hostPath:
+              path: /mnt/locke-nas/google-photos
+              type: Directory
+          restartPolicy: Never
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: gphotos-sync-full
+  namespace: gphotos-sync
+spec:
+  schedule: "0 0 1 */2 *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          hostPID: true
+          containers:
+          - name: gphotos-sync
+            image: ghcr.io/iaguis/gphotos-sync:v1
+            imagePullPolicy: IfNotPresent
+            command:
+            - /usr/bin/gphotos-sync.sh
+            - full
+            volumeMounts:
+            - mountPath: /tmp/gphotos-cdp
+              name: chrome-profile
+            - mountPath: /home/nonroot/Downloads/gphotos-cdp
+              name: google-photos
+          volumes:
+          - name: chrome-profile
+            hostPath:
+              path: /mnt/locke-nas/iago-home/gphotos-cdp
+              type: Directory
+          - name: google-photos
+            hostPath:
+              path: /mnt/locke-nas/google-photos
+              type: Directory
+          restartPolicy: Never
