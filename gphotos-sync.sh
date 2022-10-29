@@ -76,13 +76,13 @@ if [ "$DATE_LIMIT" ]; then
 
     for d in $FILES; do
         for f in $(find "$OUTPUT_DIR/$d" -iname "*jpg"); do
-            EXIFDATA=$(exif "$f")
+            EXIFDATE=$(exiftool -T -DateTimeOriginal "$f")
             if [ $? != 0 ]; then
                 continue
             fi
 
-            DATE="$(echo "$EXIFDATA" | grep 'Date and Time (Ori' | awk -F'|' '{print $2}' | awk '{print $1}' | sed 's/:/-/g')"
-            DATE_DIFF=$((($(date -jf %Y-%m-%d "$DATE_LIMIT" +%s) - $(date -jf %Y-%m-%d "$DATE" +%s))/86400))
+            DATE="$(echo "$EXIFDATE" | awk '{print $1}' | sed 's/:/-/g')"
+            DATE_DIFF=$((($(date -d "$DATE_LIMIT" +%s) - $(date -d "$DATE" +%s))/86400))
             if [ $DATE_DIFF == 0 ]; then
                 URL='https://photos.google.com/photo/'"$d"
                 break

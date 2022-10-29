@@ -15,14 +15,10 @@ RUN echo @edge http://nl.alpinelinux.org/alpine/edge/community > /etc/apk/reposi
     && echo @edge http://nl.alpinelinux.org/alpine/edge/main >> /etc/apk/repositories \
     && apk add --no-cache \
       exiftool@edge \
-      libstdc++@edge \
       chromium@edge \
-      harfbuzz@edge \
-      nss@edge \
-      freetype@edge \
-      ttf-freefont@edge \
-      tzdata@edge \
-      curl@edge \
+      bash@edge \
+      coreutils@edge \
+      findutils@edge \
     && rm -rf /var/cache/* \
     && mkdir /var/cache/apk
 
@@ -33,8 +29,6 @@ RUN addgroup -g 5000 photos && adduser -D -u 805 -G photos nonroot
 
 RUN mkdir /google-photos && chown -R nonroot:photos /google-photos
 
-RUN apk add bash@edge coreutils@edge
-
 USER 805:5000
 
-CMD ["/app/gphotos-sync.sh"]
+CMD ["gphotos-sync.sh", "short"]
