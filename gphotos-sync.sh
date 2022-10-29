@@ -21,25 +21,31 @@ else
 fi
 
 if [ $SCAN_MODE == "full" ]; then
-    if pgrep -f "gphotos-sync.sh full"; then
-        echo "Full sync already running. Exiting..."
-        exit 0
-    fi
+    for pid in $(pgrep -f "gphotos-sync.sh full"); do
+        if [ $pid != $$ ]; then
+            echo "Full sync already running. Exiting..."
+            exit 0
+        fi
+    done
     killall chrome
 elif [ $SCAN_MODE == "medium" ]; then
-    if pgrep -f "gphotos-sync.sh full" || pgrep -f "gphotos-sync.sh medium"; then
-        echo "Medium or full sync already running. Exiting..."
-        exit 0
-    fi
+    for pid in $(pgrep -f "gphotos-sync.sh full"); do
+        if [ $pid != $$ ]; then
+            echo "Medium or full sync already running. Exiting..."
+            exit 0
+        fi
+    done
     killall chrome
 else
-    if pgrep gphotos-sync.sh; then
-        echo "Sync already running. Exiting..."
-        exit 0
-    fi
+    for pid in $(pgrep "gphotos-sync.sh"); do
+        if [ $pid != $$ ]; then
+            echo "Sync already running. Exiting..."
+            exit 0
+        fi
+    done
 fi
 
-OUTPUT_DIR="/google-photos"
+OUTPUT_DIR="/home/nonroot/Downloads/gphotos-cdp"
 
 # First pass, download everything using traditional gphotos-cdp
 if [ ! -e "$OUTPUT_DIR" ]; then
