@@ -17,7 +17,7 @@ spec:
           hostPID: true
           containers:
           - name: gphotos-sync
-            image: ghcr.io/iaguis/gphotos-sync:v1
+            image: ghcr.io/iaguis/gphotos-cdp:v1
             imagePullPolicy: IfNotPresent
             command:
             - /usr/bin/gphotos-sync.sh
@@ -52,7 +52,7 @@ spec:
           hostPID: true
           containers:
           - name: gphotos-sync
-            image: ghcr.io/iaguis/gphotos-sync:v1
+            image: ghcr.io/iaguis/gphotos-cdp:v1
             imagePullPolicy: IfNotPresent
             command:
             - /usr/bin/gphotos-sync.sh
@@ -87,7 +87,7 @@ spec:
           hostPID: true
           containers:
           - name: gphotos-sync
-            image: ghcr.io/iaguis/gphotos-sync:v1
+            image: ghcr.io/iaguis/gphotos-cdp:v1
             imagePullPolicy: IfNotPresent
             command:
             - /usr/bin/gphotos-sync.sh
