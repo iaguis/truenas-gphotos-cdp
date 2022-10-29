@@ -117,6 +117,9 @@ killall chrome
 
 if [ $SUCCESS == 1 ]; then
     # success! let's unzip possible Photos.zip and exit
+
+    # shellcheck disable=SC2016
+    find "$OUTPUT_DIR" -name 'Photos.zip' -execdir unzip '{}' \; -exec bash -c 'mv "$1" "$1.bak"' bash {} \;
     exit 0
 else
     # fail!
