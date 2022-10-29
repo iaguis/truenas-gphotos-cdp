@@ -88,6 +88,8 @@ if [ "$DATE_LIMIT" ]; then
     done
 fi
 
+SUCCESS=0
+
 if [ "$DATE_LIMIT" ]; then
     # start at some reasonable photo ($DATE_LIMIT) to capture new
     # shared album photos in combination with the skipexisting flag
@@ -99,17 +101,24 @@ else
     timeout 10m go/bin/gphotos-cdp --dev -v -headless -skipexisting
 fi
 if [ $? == 0 ]; then
-    # success! let's kill chrome and exit
-    killall chrome
-    exit 0
+    SUCCESS=1
 else
     # timeout or error, try 10 more times before giving up
     for _ in $(seq 1 10); do
         timeout 10m go/bin/gphotos-cdp --dev -v -headless -skipexisting
         if [ $? == 0 ]; then
-            killall chrome
-            exit 0
+            SUCCESS=1
         fi
     done
+fi
+
+# don't let lingering chrome processes
+killall chrome
+
+if [ $SUCCESS == 1 ]; then
+    # success! let's unzip possible Photos.zip and exit
+    exit 0
+else
+    # fail!
     exit 1
 fi
