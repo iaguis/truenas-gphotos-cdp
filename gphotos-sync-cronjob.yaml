@@ -10,6 +10,8 @@ metadata:
   namespace: gphotos-sync
 spec:
   schedule: "50 */3 * * *"
+  failedJobsHistoryLimit: 3
+  successfulJobsHistoryLimit: 2
   jobTemplate:
     spec:
       template:
@@ -45,6 +47,8 @@ metadata:
   namespace: gphotos-sync
 spec:
   schedule: "0 0 * * 6"
+  failedJobsHistoryLimit: 3
+  successfulJobsHistoryLimit: 2
   jobTemplate:
     spec:
       template:
@@ -80,6 +84,8 @@ metadata:
   namespace: gphotos-sync
 spec:
   schedule: "0 0 1 */2 *"
+  failedJobsHistoryLimit: 3
+  successfulJobsHistoryLimit: 2
   jobTemplate:
     spec:
       template:
