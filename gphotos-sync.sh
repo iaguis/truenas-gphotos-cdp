@@ -75,7 +75,7 @@ if [ "$DATE_LIMIT" ]; then
     FILES="$(ls -ht "$OUTPUT_DIR" | head -n 10000)"
 
     for d in $FILES; do
-        for f in $(find "$OUTPUT_DIR/$d" -iname "*jpg"); do
+        for f in "$(find "$OUTPUT_DIR/$d" -iname "*jpg")"; do
             EXIFDATE="$(exiftool -T -DateTimeOriginal "$f")"
             if [ $? != 0 ]; then
                 continue
