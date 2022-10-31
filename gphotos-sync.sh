@@ -22,7 +22,7 @@ fi
 
 if [ $SCAN_MODE == "full" ]; then
     for pid in $(pgrep -f "gphotos-sync.sh full"); do
-        if [ $pid != $$ ]; then
+        if [ "$pid" != $$ ]; then
             echo "Full sync already running. Exiting..."
             exit 0
         fi
@@ -30,7 +30,7 @@ if [ $SCAN_MODE == "full" ]; then
     killall chrome
 elif [ $SCAN_MODE == "medium" ]; then
     for pid in $(pgrep -f "gphotos-sync.sh full"); do
-        if [ $pid != $$ ]; then
+        if [ "$pid" != $$ ]; then
             echo "Medium or full sync already running. Exiting..."
             exit 0
         fi
@@ -38,7 +38,7 @@ elif [ $SCAN_MODE == "medium" ]; then
     killall chrome
 else
     for pid in $(pgrep "gphotos-sync.sh"); do
-        if [ $pid != $$ ]; then
+        if [ "$pid" != $$ ]; then
             echo "Sync already running. Exiting..."
             exit 0
         fi
@@ -76,13 +76,13 @@ if [ "$DATE_LIMIT" ]; then
 
     for d in $FILES; do
         for f in $(find "$OUTPUT_DIR/$d" -iname "*jpg"); do
-            EXIFDATE=$(exiftool -T -DateTimeOriginal "$f")
+            EXIFDATE="$(exiftool -T -DateTimeOriginal "$f")"
             if [ $? != 0 ]; then
                 continue
             fi
 
             DATE="$(echo "$EXIFDATE" | awk '{print $1}' | sed 's/:/-/g')"
-            DATE_DIFF=$((($(date -d "$DATE_LIMIT" +%s) - $(date -d "$DATE" +%s))/86400))
+            DATE_DIFF="$((($(date -d "$DATE_LIMIT" +%s) - $(date -d "$DATE" +%s))/86400))"
             if [ $DATE_DIFF == 0 ]; then
                 URL='https://photos.google.com/photo/'"$d"
                 break
