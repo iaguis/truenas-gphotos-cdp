@@ -20,7 +20,7 @@ spec:
           containers:
           - name: gphotos-sync
             image: ghcr.io/iaguis/gphotos-cdp:v1
-            imagePullPolicy: IfNotPresent
+            imagePullPolicy: Always
             command:
             - /usr/bin/gphotos-sync.sh
             - short
@@ -57,7 +57,7 @@ spec:
           containers:
           - name: gphotos-sync
             image: ghcr.io/iaguis/gphotos-cdp:v1
-            imagePullPolicy: IfNotPresent
+            imagePullPolicy: Always
             command:
             - /usr/bin/gphotos-sync.sh
             - medium
@@ -94,7 +94,7 @@ spec:
           containers:
           - name: gphotos-sync
             image: ghcr.io/iaguis/gphotos-cdp:v1
-            imagePullPolicy: IfNotPresent
+            imagePullPolicy: Always
             command:
             - /usr/bin/gphotos-sync.sh
             - full
