@@ -37,7 +37,7 @@ elif [ $SCAN_MODE == "medium" ]; then
     done
     killall chrome
 else
-    for pid in $(pgrep "gphotos-sync.sh"); do
+    for pid in $(pgrep -f "gphotos-sync.sh"); do
         if [ "$pid" != $$ ]; then
             echo "Sync already running. Exiting..."
             exit 0
