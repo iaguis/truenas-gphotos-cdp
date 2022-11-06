@@ -100,7 +100,7 @@ elif [ $SCAN_MODE == "medium" ]; then
     DAYS_THRESHOLD=10
 elif [ $SCAN_MODE == "long" ]; then
     # Start from 2 years ago
-    DATE_LIMIT="$(date -d "2 years" "+%Y-%m-%d")"
+    DATE_LIMIT="$(date -d "2 years ago" "+%Y-%m-%d")"
     DAYS_THRESHOLD=30
 fi
 
