@@ -66,9 +66,11 @@ fi
 if [ $SCAN_MODE == "short" ]; then
     # Start from 5 days ago
     DATE_LIMIT="$(date -d "5 days ago" "+%Y-%m-%d")"
+    DAYS_THRESHOLD=5
 elif [ $SCAN_MODE == "medium" ]; then
     # Start from 30 days ago
     DATE_LIMIT="$(date -d "30 days ago" "+%Y-%m-%d")"
+    DAYS_THRESHOLD=10
 fi
 
 if [ "$DATE_LIMIT" ]; then
@@ -83,7 +85,7 @@ if [ "$DATE_LIMIT" ]; then
 
             DATE="$(echo "$EXIFDATE" | awk '{print $1}' | sed 's/:/-/g')"
             DATE_DIFF="$((($(date -d "$DATE_LIMIT" +%s) - $(date -d "$DATE" +%s))/86400))"
-            if [ $DATE_DIFF -gt 0 ] && [ $DATE_DIFF -lt 10 ]; then
+            if [ $DATE_DIFF -ge -$DAYS_THRESHOLD ] && [ $DATE_DIFF -le $DAYS_THRESHOLD ]; then
                 URL='https://photos.google.com/photo/'"$d"
                 break
             fi
