@@ -126,6 +126,7 @@ else
         timeout "$TIMEOUT" gphotos-cdp --dev -v -headless -skipexisting
         if [ $? == 0 ]; then
             SUCCESS=1
+            break
         fi
     done
 fi
