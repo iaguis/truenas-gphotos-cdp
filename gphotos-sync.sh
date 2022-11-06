@@ -83,7 +83,7 @@ if [ "$DATE_LIMIT" ]; then
 
             DATE="$(echo "$EXIFDATE" | awk '{print $1}' | sed 's/:/-/g')"
             DATE_DIFF="$((($(date -d "$DATE_LIMIT" +%s) - $(date -d "$DATE" +%s))/86400))"
-            if [ $DATE_DIFF == 0 ]; then
+            if [ $DATE_DIFF -gt 0 ]; then
                 URL='https://photos.google.com/photo/'"$d"
                 break
             fi
