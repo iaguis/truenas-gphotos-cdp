@@ -72,7 +72,7 @@ elif [ $SCAN_MODE == "medium" ]; then
 fi
 
 if [ "$DATE_LIMIT" ]; then
-    FILES="$(ls -ht "$OUTPUT_DIR" | head -n 10000)"
+    FILES="$(ls -ht "$OUTPUT_DIR")"
 
     for d in $FILES; do
         while IFS= read -r -d '' f; do
