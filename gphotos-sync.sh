@@ -116,7 +116,8 @@ if [ "$DATE_LIMIT" ]; then
 
             DATE="$(echo "$EXIFDATE" | awk '{print $1}' | sed 's/:/-/g')"
             DATE_DIFF="$((($(date -d "$DATE_LIMIT" +%s) - $(date -d "$DATE" +%s))/86400))"
-            if [ $DATE_DIFF -ge -$DAYS_THRESHOLD ] && [ $DATE_DIFF -le $DAYS_THRESHOLD ]; then
+            echo "[debug] $f - DATE_DIFF = $DATE_DIFF (threshold: $DAYS_THRESHOLD)"
+            if [ $DATE_DIFF -ge -"$DAYS_THRESHOLD" ] && [ $DATE_DIFF -le "$DAYS_THRESHOLD" ]; then
                 URL='https://photos.google.com/photo/'"$d"
                 break
             fi
