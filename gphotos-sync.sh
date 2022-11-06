@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 function usage () {
-    echo "Usage: $0 [short|medium|full]"
+    echo "Usage: $0 [short|medium|long|full]"
 }
 
 if [ $# != 1 ]; then
@@ -13,6 +13,8 @@ if [ "$1" == "short" ]; then
     SCAN_MODE="short"
 elif [ "$1" == "medium" ]; then
     SCAN_MODE="medium"
+elif [ "$1" == "long" ]; then
+    SCAN_MODE="long"
 elif [ "$1" == "full" ]; then
     SCAN_MODE="full"
 else
@@ -20,29 +22,54 @@ else
     exit 1
 fi
 
-if [ $SCAN_MODE == "full" ]; then
-    for pid in $(pgrep -f "gphotos-sync.sh full"); do
+function is_sync_running() {
+    local MODE="$1"
+
+    for pid in $(pgrep -f "gphotos-sync.sh $MODE"); do
         if [ "$pid" != $$ ]; then
-            echo "Full sync already running. Exiting..."
-            exit 0
+            return 0
         fi
     done
+
+    return 1
+}
+
+if [ $SCAN_MODE == "full" ]; then
+    if is_sync_running "full"; then
+        echo "Full sync already running. Exiting..."
+        exit 0
+    fi
+    killall chrome
+elif [ $SCAN_MODE == "long" ]; then
+    if is_sync_running "long"; then
+        echo "Long sync already running. Exiting..."
+        exit 0
+    fi
+    if is_sync_running "full"; then
+        echo "Full sync already running. Exiting..."
+        exit 0
+    fi
     killall chrome
 elif [ $SCAN_MODE == "medium" ]; then
-    for pid in $(pgrep -f "gphotos-sync.sh full"); do
-        if [ "$pid" != $$ ]; then
-            echo "Medium or full sync already running. Exiting..."
-            exit 0
-        fi
-    done
+    if is_sync_running "medium"; then
+        echo "Medium sync already running. Exiting..."
+        exit 0
+    fi
+    if is_sync_running "long"; then
+        echo "Long sync already running. Exiting..."
+        exit 0
+    fi
+    if is_sync_running "full"; then
+        echo "Full sync already running. Exiting..."
+        exit 0
+    fi
     killall chrome
 else
-    for pid in $(pgrep -f "gphotos-sync.sh"); do
-        if [ "$pid" != $$ ]; then
-            echo "Sync already running. Exiting..."
-            exit 0
-        fi
-    done
+    if is_sync_running; then
+        echo "Sync already running. Exiting..."
+        exit 0
+    fi
+    killall chrome
 fi
 
 OUTPUT_DIR="/home/nonroot/Downloads/gphotos-cdp"
@@ -71,6 +98,10 @@ elif [ $SCAN_MODE == "medium" ]; then
     # Start from 30 days ago
     DATE_LIMIT="$(date -d "30 days ago" "+%Y-%m-%d")"
     DAYS_THRESHOLD=10
+elif [ $SCAN_MODE == "long" ]; then
+    # Start from 2 years ago
+    DATE_LIMIT="$(date -d "2 years" "+%Y-%m-%d")"
+    DAYS_THRESHOLD=30
 fi
 
 if [ "$DATE_LIMIT" ]; then
@@ -114,8 +145,8 @@ else
     RETRIES=10
     TIMEOUT="10m"
 
-    if [ $SCAN_MODE == "full" ]; then
-        # Starting from the beginning is less reliable, retry more and more
+    if [ $SCAN_MODE == "full" ] || [ $SCAN_MODE == "long" ]; then
+        # Starting from long ago is less reliable, retry more and more
         # often
         RETRIES=300
         TIMEOUT="5m"
