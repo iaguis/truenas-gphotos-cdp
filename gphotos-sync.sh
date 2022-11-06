@@ -109,9 +109,19 @@ fi
 if [ $? == 0 ]; then
     SUCCESS=1
 else
-    # timeout or error, try 10 more times before giving up
-    for _ in $(seq 1 10); do
-        timeout 10m gphotos-cdp --dev -v -headless -skipexisting
+    RETRIES=10
+    TIMEOUT="10m"
+
+    if [ $SCAN_MODE == "full" ]; then
+        # Starting from the beginning is less reliable, retry more and more
+        # often
+        RETRIES=300
+        TIMEOUT="5m"
+    fi
+
+    # timeout or error, try some more times before giving up
+    for _ in $(seq 1 $RETRIES); do
+        timeout "$TIMEOUT" gphotos-cdp --dev -v -headless -skipexisting
         if [ $? == 0 ]; then
             SUCCESS=1
         fi
