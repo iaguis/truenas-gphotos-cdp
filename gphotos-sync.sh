@@ -93,7 +93,7 @@ fi
 if [ $SCAN_MODE == "short" ]; then
     # Start from 5 days ago
     DATE_LIMIT="$(date -d "5 days ago" "+%Y-%m-%d")"
-    DAYS_THRESHOLD=5
+    DAYS_THRESHOLD=1
 elif [ $SCAN_MODE == "medium" ]; then
     # Start from 30 days ago
     DATE_LIMIT="$(date -d "30 days ago" "+%Y-%m-%d")"
