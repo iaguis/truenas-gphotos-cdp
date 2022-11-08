@@ -9,6 +9,10 @@ if [ $# != 1 ]; then
     exit 1
 fi
 
+if [ -n "$HEALTHCHECK_ID" ]; then
+    curl -sS -X POST -o /dev/null "https://hc-ping.com/$HEALTHCHECK_ID/start"
+fi
+
 if [ "$1" == "short" ]; then
     SCAN_MODE="short"
 elif [ "$1" == "medium" ]; then
@@ -37,36 +41,71 @@ function is_sync_running() {
 if [ $SCAN_MODE == "full" ]; then
     if is_sync_running "full"; then
         echo "Full sync already running. Exiting..."
+
+        if [ -n "$HEALTHCHECK_ID" ]; then
+            curl -sS -X POST -o /dev/null --fail "https://hc-ping.com/$HEALTHCHECK_ID"
+        fi
+
         exit 0
     fi
     killall chrome
 elif [ $SCAN_MODE == "long" ]; then
     if is_sync_running "long"; then
         echo "Long sync already running. Exiting..."
+
+        if [ -n "$HEALTHCHECK_ID" ]; then
+            curl -sS -X POST -o /dev/null --fail "https://hc-ping.com/$HEALTHCHECK_ID"
+        fi
+
         exit 0
     fi
     if is_sync_running "full"; then
         echo "Full sync already running. Exiting..."
+
+        if [ -n "$HEALTHCHECK_ID" ]; then
+            curl -sS -X POST -o /dev/null --fail "https://hc-ping.com/$HEALTHCHECK_ID"
+        fi
+
         exit 0
     fi
     killall chrome
 elif [ $SCAN_MODE == "medium" ]; then
     if is_sync_running "medium"; then
         echo "Medium sync already running. Exiting..."
+
+        if [ -n "$HEALTHCHECK_ID" ]; then
+            curl -sS -X POST -o /dev/null --fail "https://hc-ping.com/$HEALTHCHECK_ID"
+        fi
+
         exit 0
     fi
     if is_sync_running "long"; then
         echo "Long sync already running. Exiting..."
+
+        if [ -n "$HEALTHCHECK_ID" ]; then
+            curl -sS -X POST -o /dev/null --fail "https://hc-ping.com/$HEALTHCHECK_ID"
+        fi
+
         exit 0
     fi
     if is_sync_running "full"; then
         echo "Full sync already running. Exiting..."
+
+        if [ -n "$HEALTHCHECK_ID" ]; then
+            curl -sS -X POST -o /dev/null --fail "https://hc-ping.com/$HEALTHCHECK_ID"
+        fi
+
         exit 0
     fi
     killall chrome
 else
     if is_sync_running; then
         echo "Sync already running. Exiting..."
+
+        if [ -n "$HEALTHCHECK_ID" ]; then
+            curl -sS -X POST -o /dev/null --fail "https://hc-ping.com/$HEALTHCHECK_ID"
+        fi
+
         exit 0
     fi
     killall chrome
@@ -84,6 +123,10 @@ if [ ! -e "$OUTPUT_DIR" ]; then
             killall chrome
         fi
     done
+
+    if [ -n "$HEALTHCHECK_ID" ]; then
+        curl -sS -X POST -o /dev/null --fail "https://hc-ping.com/$HEALTHCHECK_ID"
+    fi
 
     exit 0
 fi
@@ -171,8 +214,17 @@ if [ $SUCCESS == 1 ]; then
 
     # shellcheck disable=SC2016
     find "$OUTPUT_DIR" -name 'Photos.zip' -execdir unzip '{}' \; -exec bash -c 'mv "$1" "$1.bak"' bash {} \;
+
+    if [ -n "$HEALTHCHECK_ID" ]; then
+        curl -sS -X POST -o /dev/null --fail "https://hc-ping.com/$HEALTHCHECK_ID"
+    fi
+
     exit 0
 else
+    if [ -n "$HEALTHCHECK_ID" ]; then
+        curl -sS -X POST -o /dev/null --fail "https://hc-ping.com/$HEALTHCHECK_ID/fail"
+    fi
+
     # fail!
     exit 1
 fi
