@@ -150,6 +150,7 @@ fi
 if [ "$DATE_LIMIT" ]; then
     FILES="$(ls -ht "$OUTPUT_DIR")"
 
+    # find file within $DATELIMIT +- $DAYS_THRESHOLD to start download from
     for d in $FILES; do
         while IFS= read -r -d '' f; do
             EXIFDATE="$(exiftool -T -DateTimeOriginal "$f")"
