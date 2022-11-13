@@ -13,6 +13,16 @@
     ```
     ls -d /mnt/locke-nas/google-photos
     ```
+* Create [healthchecks.io](https://healthchecks.io) secret
+    ```
+    alias k='sudo k3s kubectl'
+    HEALTHCHECKS_SHORT_UUID="XXX"
+    HEALTHCHECKS_MEDIUM_UUID="XXX"
+    HEALTHCHECKS_LONG_UUID="XXX"
+    k create secret gphotos-sync-short-healthcheck --from-literal=id="$HEALTHCHECKS_SHORT_UUID"
+    k create secret gphotos-sync-medium-healthcheck --from-literal=id="$HEALTHCHECKS_MEDIUM_UUID"
+    k create secret gphotos-sync-long-healthcheck --from-literal=id="$HEALTHCHECKS_LONG_UUID"
+    ```
 * Apply CronJobs
     ```
     alias k='sudo k3s kubectl'
