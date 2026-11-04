@@ -1,9 +1,9 @@
-# Run gphotos-cdp in TrueNAS Kubernetes
+# Run gphotos-cdp in TrueNAS
 
 * Build and push the gphotos-cdp image (if not done already)
     ```
-    docker build -t ghcr.io/iaguis/gphotos-cdp:v1 .
-    docker push ghcr.io/iaguis/gphotos-cdp:v1
+    docker build -t ghcr.io/iaguis/gphotos-cdp:v6 .
+    docker push ghcr.io/iaguis/gphotos-cdp:v6
     ```
 * Copy Chromium's profile logged in to the Google Photos account to the iago-home dataset
     ```
@@ -13,18 +13,9 @@
     ```
     ls -d /mnt/locke-nas/google-photos
     ```
-* Create [healthchecks.io](https://healthchecks.io) secret
+* Create [healthchecks.io](https://healthchecks.io) secret and add it to [`run-gphotos-sync.sh`](./run-gphotos-sync.sh)
     ```
-    alias k='sudo k3s kubectl'
-    HEALTHCHECKS_SHORT_UUID="XXX"
-    HEALTHCHECKS_MEDIUM_UUID="XXX"
-    HEALTHCHECKS_LONG_UUID="XXX"
-    k create secret gphotos-sync-short-healthcheck --from-literal=id="$HEALTHCHECKS_SHORT_UUID"
-    k create secret gphotos-sync-medium-healthcheck --from-literal=id="$HEALTHCHECKS_MEDIUM_UUID"
-    k create secret gphotos-sync-long-healthcheck --from-literal=id="$HEALTHCHECKS_LONG_UUID"
+    HEALTHCHECK_ID="00112233-4455-6677-8899-aabbccddeeff"
     ```
-* Apply CronJobs
-    ```
-    alias k='sudo k3s kubectl'
-    k apply -f gphotos-sync-cronjob.yaml
-    ```
+* Create a Cron Job in the TrueNAS UI under "System-Advanced Settings-Cron Jobs"
+    We're currently using a Custom schedule: `50 */3 * * *`.
