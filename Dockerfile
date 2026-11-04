@@ -36,4 +36,4 @@ RUN mkdir /google-photos && chown -R 1000:0 /google-photos
 
 USER 1000:0
 
-CMD ["gphotos-sync.sh", "short"]
+CMD ["gphotos-sync.sh"]
