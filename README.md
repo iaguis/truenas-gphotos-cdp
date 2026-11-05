@@ -18,4 +18,4 @@
     HEALTHCHECK_ID="00112233-4455-6677-8899-aabbccddeeff"
     ```
 * Create a Cron Job in the TrueNAS UI under "System-Advanced Settings-Cron Jobs"
-    We're currently using a Custom schedule: `50 */3 * * *`.
+    We're currently using a Custom schedule: `50 10-23/4 * * *`.
